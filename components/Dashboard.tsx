@@ -262,6 +262,7 @@ export default function Dashboard({ initialData }: { initialData: DashboardData 
           onToggleGroupByDepartment={() => setGroupByDepartment((g) => !g)}
           onAddTask={openCreateModal}
           onManageCategories={() => setManageOpen(true)}
+          exportTasks={filteredTasks}
         />
 
         <TaskTable

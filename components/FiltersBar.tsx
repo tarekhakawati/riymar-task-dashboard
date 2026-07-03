@@ -1,7 +1,8 @@
 "use client";
 
-import { Department, Priority, PRIORITIES, TaskStatus } from "@/lib/types";
+import { Department, Priority, PRIORITIES, Task, TaskStatus } from "@/lib/types";
 import { Plus, Search, ArrowDownUp, Settings, Rows3 } from "lucide-react";
+import ExportMenu from "./ExportMenu";
 
 export type SortKey = "startDate" | "endDate" | "status" | "priority" | "duration" | "name";
 
@@ -24,6 +25,7 @@ interface FiltersBarProps {
   onToggleGroupByDepartment: () => void;
   onAddTask: () => void;
   onManageCategories: () => void;
+  exportTasks: Task[];
 }
 
 export default function FiltersBar({
@@ -45,6 +47,7 @@ export default function FiltersBar({
   onToggleGroupByDepartment,
   onAddTask,
   onManageCategories,
+  exportTasks,
 }: FiltersBarProps) {
   const selectClass =
     "rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100";
@@ -142,6 +145,7 @@ export default function FiltersBar({
       </div>
 
       <div className="flex items-center gap-2">
+        <ExportMenu tasks={exportTasks} />
         <button
           type="button"
           onClick={onManageCategories}
