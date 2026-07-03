@@ -9,9 +9,9 @@ interface CategoryListProps {
   items: string[];
   protectedItems: string[];
   usageCount: (item: string) => number;
-  onAdd: (name: string) => string | null;
-  onRename: (oldName: string, newName: string) => string | null;
-  onDelete: (name: string, reassignTo: string | null) => void;
+  onAdd: (name: string) => Promise<string | null>;
+  onRename: (oldName: string, newName: string) => Promise<string | null>;
+  onDelete: (name: string, reassignTo: string | null) => Promise<void>;
 }
 
 function CategoryList({
@@ -38,9 +38,9 @@ function CategoryList({
     setEditError(null);
   };
 
-  const submitEdit = () => {
+  const submitEdit = async () => {
     if (!editingItem) return;
-    const error = onRename(editingItem, editValue.trim());
+    const error = await onRename(editingItem, editValue.trim());
     if (error) {
       setEditError(error);
       return;
@@ -49,8 +49,8 @@ function CategoryList({
     setEditError(null);
   };
 
-  const submitAdd = () => {
-    const error = onAdd(newValue.trim());
+  const submitAdd = async () => {
+    const error = await onAdd(newValue.trim());
     if (error) {
       setAddError(error);
       return;
@@ -64,9 +64,9 @@ function CategoryList({
     setReassignTo(items.find((i) => i !== item) ?? "");
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!deletingItem) return;
-    onDelete(deletingItem, usageCount(deletingItem) > 0 ? reassignTo : null);
+    await onDelete(deletingItem, usageCount(deletingItem) > 0 ? reassignTo : null);
     setDeletingItem(null);
   };
 
@@ -232,12 +232,12 @@ interface ManageCategoriesModalProps {
   protectedStatuses: readonly string[];
   departmentUsage: (department: string) => number;
   statusUsage: (status: string) => number;
-  onAddDepartment: (name: string) => string | null;
-  onRenameDepartment: (oldName: string, newName: string) => string | null;
-  onDeleteDepartment: (name: string, reassignTo: string | null) => void;
-  onAddStatus: (name: string) => string | null;
-  onRenameStatus: (oldName: string, newName: string) => string | null;
-  onDeleteStatus: (name: string, reassignTo: string | null) => void;
+  onAddDepartment: (name: string) => Promise<string | null>;
+  onRenameDepartment: (oldName: string, newName: string) => Promise<string | null>;
+  onDeleteDepartment: (name: string, reassignTo: string | null) => Promise<void>;
+  onAddStatus: (name: string) => Promise<string | null>;
+  onRenameStatus: (oldName: string, newName: string) => Promise<string | null>;
+  onDeleteStatus: (name: string, reassignTo: string | null) => Promise<void>;
 }
 
 export default function ManageCategoriesModal({

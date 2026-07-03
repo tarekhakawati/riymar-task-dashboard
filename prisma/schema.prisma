@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id                String                   @id @default(uuid())
+  name              String
+  description       String                   @default("")
+  department        String
+  status            String
+  startDate         String
+  endDate           String?
+  priority          String
+  assignedPerson    String                   @default("")
+  notes             String                   @default("")
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  departmentHistory DepartmentHistoryEntry[]
+
+  @@index([department])
+  @@index([status])
+}
+
+model DepartmentHistoryEntry {
+  id         String   @id @default(uuid())
+  taskId     String
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  department String
+  enteredAt  String
+  leftAt     String?
+  createdAt  DateTime @default(now())
+
+  @@index([taskId])
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Status {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  order       Int      @default(0)
+  isProtected Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
